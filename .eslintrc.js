@@ -14,7 +14,8 @@ module.exports = {
     '@typescript-eslint/interface-name-prefix': [1, { prefixWithI: 'always', allowUnderscorePrefix: true }],
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-var-requires': 'off'
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/member-delimiter-style': 'off'
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
   },
