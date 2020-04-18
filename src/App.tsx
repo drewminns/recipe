@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import styled from 'styled-components'
 
+import { GlobalStyle } from './GlobalStyles'
 import { CategoriesList } from './Containers/CategoriesList'
 import { Category } from './Containers/Category'
 import { Loading } from './Components'
+import { theme } from './GlobalStyles'
 
 const URI_BASE = 'https://www.themealdb.com/api/json/v1/1/'
 const CATEGORIES = 'categories.php'
@@ -34,24 +37,46 @@ export const App: React.FC<{}> = () => {
   }
 
   return (
-    <Router>
-      <header>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-        </ul>
-      </header>
-      <main style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-        {categories && <CategoriesList categories={categories} />}
-        <Switch>
-          <Route strict path="/categories/:categoryname">
-            <Category />
-          </Route>
-        </Switch>
-      </main>
-    </Router>
+    <>
+      <GlobalStyle />
+      <Router>
+        <LayoutStyles>
+          {categories && <CategoriesList categories={categories} />}
+          <Switch>
+            <Route exact path="/">
+              <CategoryEmpty>
+                <CategoryEmptyText>Select a Category</CategoryEmptyText>
+              </CategoryEmpty>
+            </Route>
+            <Route path="/:categoryname">
+              <Category />
+            </Route>
+          </Switch>
+        </LayoutStyles>
+      </Router>
+    </>
   )
 }
+
+const LayoutStyles = styled.main`
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  height: 100vh;
+  overflow: hidden;
+`
+
+const CategoryEmpty = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const CategoryEmptyText = styled.p`
+  color: ${theme.color.gray};
+  font-family: ${theme.font.sans};
+  font-weight: ${theme.font.bold};
+  text-transform: uppercase;
+`
 
 App.displayName = 'App'

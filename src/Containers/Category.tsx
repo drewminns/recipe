@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Switch, Route, Link, useParams, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, useParams, useRouteMatch } from 'react-router-dom'
+import styled from 'styled-components'
 
 import { IMealByCategory } from '../interfaces'
 import { Recipe } from './Recipe'
-import { Loading, Card } from '../Components'
+import { Loading, Card, Title } from '../Components'
+import { theme } from '../GlobalStyles'
 
 const URI_BASE = 'https://www.themealdb.com/api/json/v1/1/'
 const RECIPES_BY_CATEGORY = 'filter.php?c='
@@ -44,29 +46,66 @@ export const Category: React.FC<CategoryProps> = ({}: CategoryProps) => {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-      <div>
-        <h2>{categoryNamePretty}</h2>
+    <CategoryLayout>
+      <CategoryWrapper>
+        <Title title={categoryNamePretty} />
         {recipes && (
-          <ul>
-            {recipes.map((meal: IMealByCategory) => (
-              <li key={meal.idMeal}>
-                <Card title={meal.strMeal} image={meal.strMealThumb} link={`${url}/${meal.idMeal}`} />
-              </li>
-            ))}
-          </ul>
+          <MealList>
+            <ul>
+              {recipes.map((meal: IMealByCategory) => (
+                <ListStyles key={meal.idMeal}>
+                  <Card title={meal.strMeal} image={meal.strMealThumb} link={`${url}/${meal.idMeal}`} />
+                </ListStyles>
+              ))}
+            </ul>
+          </MealList>
         )}
-      </div>
+      </CategoryWrapper>
       <Switch>
         <Route exact path={path}>
-          <h3>Please select a Recipe.</h3>
+          <RecipeEmpty>
+            <RecipeEmptyText>Select a Recipe</RecipeEmptyText>
+          </RecipeEmpty>
         </Route>
         <Route path={`${path}/:recipeid`}>
           <Recipe />
         </Route>
       </Switch>
-    </div>
+    </CategoryLayout>
   )
 }
 
 Category.displayName = 'Category Recipes'
+
+const CategoryLayout = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  overflow-y: hidden;
+`
+
+const CategoryWrapper = styled.div`
+  height: calc(100vh - 85px);
+`
+
+const MealList = styled.div`
+  overflow-y: scroll;
+  height: 100%;
+  padding: 1rem;
+`
+
+const ListStyles = styled.li`
+  list-style: none;
+`
+
+const RecipeEmpty = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const RecipeEmptyText = styled.p`
+  color: ${theme.color.gray};
+  font-family: ${theme.font.sans};
+  text-transform: uppercase;
+`
