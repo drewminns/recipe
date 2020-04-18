@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 
-import { ICategories, IMealByCategory, IMealById } from '../interfaces/mealDBResponse'
+import { ICategory, IMealById } from '../interfaces/mealDBResponse'
 
 type useFetchType = { response: IMealDBResponse | null; error: {}; isLoading: boolean }
 
 interface IMealDBResponse {
-  categories?: ICategories[]
-  meals?: IMealByCategory[] | IMealById[]
+  categories?: ICategory[]
+  meals?: IMealById[]
 }
 
 export const useMealDBFetch = (endpoint: string, query = ''): useFetchType => {
@@ -31,7 +31,7 @@ export const useMealDBFetch = (endpoint: string, query = ''): useFetchType => {
     }
 
     fetchData()
-  }, [])
+  }, [endpoint])
 
   return { response, error, isLoading }
 }

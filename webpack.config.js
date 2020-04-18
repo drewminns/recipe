@@ -11,6 +11,7 @@ module.exports = {
   mode: PROD,
   output: {
     filename: '[name].[hash].js',
+    publicPath: '/',
     path: dist,
   },
   devtool: PROD ? 'source-map' : 'eval',
@@ -29,9 +30,8 @@ module.exports = {
   },
   devServer: {
     port: 3000,
-    proxy: {
-      '/api': 'http://localhost:5000',
-    },
+    historyApiFallback: true,
+    publicPath: '/',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],

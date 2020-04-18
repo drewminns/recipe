@@ -14,7 +14,7 @@ export interface IMealById extends IMealByCategory {
   dateModified: Date | null
 }
 
-export interface ICategories {
+export interface ICategory {
   idCategory: number
   strCategory: string
   strCategoryThumb: string
