@@ -19,3 +19,11 @@ Run `npm run build` and place contents of `dist` folder on hosting platform.
 - TypeScript v3.7 (Uses [optional chaining](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#optional-chaining))
 - Styled Components v5.1
 - Unfetch v4.1
+
+## Future Considerations
+
+- Add mobile view with swipe functionality for nested navigation
+- Focus elements of appropriate section to aid with screenreader and assistive technologies when navigating
+- Provide image sizes to add with native lazy loading attributes
+- Tests
+- Better error handling
