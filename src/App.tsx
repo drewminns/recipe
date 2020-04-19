@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { GlobalStyle } from './GlobalStyles'
 import { CategoriesList } from './Containers/CategoriesList'
 import { Category } from './Containers/Category'
-import { Loading } from './Components'
+import { Loading, Error } from './Components'
 import { theme } from './GlobalStyles'
 
 const URI_BASE = 'https://www.themealdb.com/api/json/v1/1/'
@@ -13,8 +13,8 @@ const CATEGORIES = 'categories.php'
 
 export const App: React.FC<{}> = () => {
   const [categories, setCategories] = useState([])
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean | undefined>(true)
 
   useEffect(() => {
     async function fetchData() {
@@ -34,6 +34,10 @@ export const App: React.FC<{}> = () => {
 
   if (isLoading) {
     return <Loading />
+  }
+
+  if (error || !categories) {
+    return <Error message="Categories" />
   }
 
   return (

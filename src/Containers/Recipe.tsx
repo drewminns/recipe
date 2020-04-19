@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { IRecipe, IIngredients } from '../interfaces'
-import { Loading } from '../Components'
+import { Loading, Error } from '../Components'
 import { normalizeRecipe } from '../utils'
 import { theme } from '../GlobalStyles'
 
@@ -20,8 +20,10 @@ interface ParamTypes {
 export const Recipe: React.FC<RecipeProps> = ({}: RecipeProps) => {
   const { recipeid, categoryname } = useParams<ParamTypes>()
   const [recipe, setRecipe] = useState([])
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean | undefined>(true)
+
+  const backButton = useRef<HTMLAnchorElement>(null)
 
   useEffect(() => {
     async function fetchData() {
@@ -32,7 +34,7 @@ export const Recipe: React.FC<RecipeProps> = ({}: RecipeProps) => {
         setIsLoading(false)
       } catch (err) {
         setIsLoading(false)
-        setError(err)
+        setError(true)
       }
     }
 
@@ -41,6 +43,10 @@ export const Recipe: React.FC<RecipeProps> = ({}: RecipeProps) => {
 
   if (isLoading) {
     return <Loading />
+  }
+
+  if (error || !recipe[0]) {
+    return <Error message={`Recipe: ${recipeid}`} />
   }
 
   const normalizedData = normalizeRecipe(recipe[0])
@@ -62,7 +68,9 @@ export const Recipe: React.FC<RecipeProps> = ({}: RecipeProps) => {
   return (
     <RecipeWrapper>
       <RecipeBackLink>
-        <Link to={`/${categoryname}`}>Back To {categoryname}</Link>
+        <Link ref={backButton} to={`/${categoryname}`}>
+          Back To {categoryname}
+        </Link>
       </RecipeBackLink>
       <RecipeCategory>
         {strCategory} {strArea && `- ${strArea}`}
@@ -96,10 +104,10 @@ export const Recipe: React.FC<RecipeProps> = ({}: RecipeProps) => {
           <p>Tags:</p>
           <RecipeTagsP>
             {strTags.split(',').map((tag: string, i: number) => (
-              <span key={tag}>
+              <>
                 {i > 0 && ','}
-                {tag}
-              </span>
+                <span key={tag}>{tag}</span>
+              </>
             ))}
           </RecipeTagsP>
         </RecipeTags>
@@ -119,6 +127,7 @@ const RecipeWrapper = styled.article`
 
 const RecipeDetails = styled.div`
   display: flex;
+  align-items: flex-start;
 `
 
 const RecipeIngredients = styled.div`
@@ -175,15 +184,20 @@ const RecipeSource = styled.a`
   color: ${theme.color.indigo};
   font-family: ${theme.font.sans};
   font-weight: ${theme.font.bold};
+
+  &:focus,
+  &:hover {
+    text-decoration: none;
+  }
 `
 
 const RecipeTagsP = styled.p`
   font-family: ${theme.font.sans};
   font-weight: ${theme.font.bold};
-  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 
   span {
     display: inline-block;
-    /* margin-right: 1rem; */
+    margin-left: 0.5ch;
   }
 `

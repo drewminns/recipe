@@ -34,16 +34,26 @@ interface ICardWrapperProps {
 }
 
 const CardWrapper = styled.div<ICardWrapperProps>`
-  padding: 1.5rem 1rem;
   margin-bottom: 1.4rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  border-left: 5px solid ${props => (props.isActive ? theme.color.indigo : 'transparent')};
   background-color: ${theme.color.white};
   border-radius: 0 1rem 1rem 0;
 
   a {
     text-decoration: none;
     color: ${theme.color.dark};
+    display: block;
+    padding: 1.5rem 1rem;
+    border: 1px solid transparent;
+    border-left: 5px solid ${props => (props.isActive ? theme.color.indigo : 'transparent')};
+
+    &:focus,
+    &:hover {
+      outline: none;
+      border: 1px solid ${theme.color.indigo};
+      padding-left: ${props => (props.isActive ? '1rem' : '1.4rem')};
+      border-left: ${props => (props.isActive ? `5px solid ${theme.color.indigo}` : `1px solid ${theme.color.indigo}`)};
+    }
   }
 `
 const CardLayout = styled.div`

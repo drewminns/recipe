@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { IMealByCategory } from '../interfaces'
 import { Recipe } from './Recipe'
-import { Loading, Card, Title } from '../Components'
+import { Loading, Card, Title, Error } from '../Components'
 import { theme } from '../GlobalStyles'
 
 const URI_BASE = 'https://www.themealdb.com/api/json/v1/1/'
@@ -19,8 +19,8 @@ interface ParamTypes {
 export const Category: React.FC<CategoryProps> = ({}: CategoryProps) => {
   const { categoryname } = useParams<ParamTypes>()
   const [recipes, setRecipes] = useState([])
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean | undefined>(true)
   const { path, url } = useRouteMatch()
 
   useEffect(() => {
@@ -43,6 +43,10 @@ export const Category: React.FC<CategoryProps> = ({}: CategoryProps) => {
 
   if (isLoading) {
     return <Loading />
+  }
+
+  if (error || !recipes) {
+    return <Error message={`Category: ${categoryname}`} />
   }
 
   return (
